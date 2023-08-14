@@ -1,4 +1,4 @@
-import sys
+import sys, os
 
 from xml.dom.minidom import parse
 
@@ -12,6 +12,14 @@ from markyp_bootstrap4.layout import container, one
 from markyp_html.inline import span, br
 from markyp_html.text import h3, p, h6
 
+def emit_github_output(key, value):
+    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+        print(f'{key}={value}', file=fh)
+
+def emit_github_outputs(test_results):
+    summary = test_results["summary"]
+    for key, value in test_results.items():
+        emit_github_output(key, value)
 
 def html_summary(test_results):
     summary = test_results["summary"]
@@ -130,6 +138,8 @@ def main():
     file = open(filename_html, "w")
     file.write(html)
     file.close()
+
+    emit_github_outputs(test_results)
 
 
 if __name__ == "__main__":

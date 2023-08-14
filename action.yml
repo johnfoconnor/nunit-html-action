@@ -8,12 +8,27 @@ inputs:
     description: 'HTML output file path'
     default: ''
     required: false
+outputs:
+  total:
+    value: ${{ steps.parser.outputs.total }}
+  passed:
+    value: ${{ steps.parser.outputs.passed }}
+  failed:
+    value: ${{ steps.parser.outputs.failed }}
+  inconclusive:
+    value: ${{ steps.parser.outputs.inconclusive }}
+  skipped:
+    value: ${{ steps.parser.outputs.skipped }}
+  asserts:
+    value: ${{ steps.parser.outputs.asserts }}
+
 runs:
   using: "composite"
   steps:
     - run: sudo python -m pip install -r ${{ github.action_path }}/requirements.txt
       shell: bash
     - run: sudo python ${{ github.action_path }}/main.py ${{ inputs.inputXmlPath }} ${{ inputs.outputHtmlPath }}
+      id: parser
       shell: bash
 branding:
   icon: 'file'
