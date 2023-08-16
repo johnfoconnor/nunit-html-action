@@ -13,12 +13,15 @@ from markyp_html.inline import span, br
 from markyp_html.text import h3, p, h6
 
 def emit_github_output(key, value):
-    with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-        print(f'{key}={value}', file=fh)
+    if "GITHUB_OUTPUT" in os.environ:
+        with open(os.environ["GITHUB_OUTPUT"], "a") as f :
+            print("{0}={1}".format(key, value), file=f)
+    else:
+        print(f"Error setting output GITHUB_OUTPUT is not defined: {key}={value}", file=sys.stderr)
 
 def emit_github_outputs(test_results):
     summary = test_results["summary"]
-    for key, value in test_results.items():
+    for key, value in summary.items():
         emit_github_output(key, value)
 
 def html_summary(test_results):
